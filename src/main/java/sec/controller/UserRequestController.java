@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/get")
+@RequestMapping("/user")
 public class UserRequestController {
 
     @Autowired
@@ -41,7 +41,7 @@ public class UserRequestController {
         return containerRepository.getContainer(containerGetRequest.getContainerId());
     }
 
-    @GetMapping("/history")
+    @GetMapping("/history-container")
     @PreAuthorize("hasRole('USER')")
     public List<History> getContainerHistory(@Valid @RequestBody ContainerGetRequest containerGetRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,7 +49,7 @@ public class UserRequestController {
         return historyRepository.getHistoryContainer(user.get().getId(), containerGetRequest.getContainerId());
     }
 
-    @GetMapping("/history-day")
+    @GetMapping("/history-container-day")
     @PreAuthorize("hasRole('USER')")
     public List<History> getContainerHistoryOfDay(@Valid @RequestBody HistoryOfDayRequest historyOfDayRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -57,5 +57,13 @@ public class UserRequestController {
         String startDateTime = historyOfDayRequest.getDate() + " 00:00:00";
         String endDateTime = historyOfDayRequest.getDate() + " 23:59:59";
         return historyRepository.getHistoryOfDayContainer(user.get().getId(), historyOfDayRequest.getContainerId(), startDateTime, endDateTime);
+    }
+
+    @GetMapping("/user-containers")
+    @PreAuthorize("hasRole('USER')")
+    public List<Container> getUserContainers() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Optional<User> currentUser = userRepository.findByUsername(auth.getName());
+        return containerRepository.getUserContainers(currentUser.get().getId());
     }
 }

@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import payloads.ApiResponse;
-import payloads.JwtAuthenticationResponse;
-import payloads.LoginRequest;
-import payloads.SignUpRequest;
+import payloads.*;
 import sec.exception.AppException;
+import sec.model.History;
 import sec.model.Role;
 import sec.model.RoleName;
 import sec.model.User;
+import sec.repo.HistoryRepository;
 import sec.repo.RoleRepository;
 import sec.repo.UserRepository;
 import sec.security.JwtTokenProvider;
@@ -38,6 +37,9 @@ public class AuthController {
 
 	@Autowired
     UserRepository userRepository;
+
+	@Autowired
+	HistoryRepository historyRepository;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -89,6 +91,18 @@ public class AuthController {
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
 	}
 
+	@PostMapping("/add/event")
+	public ResponseEntity<?> postEventFromContainer(@Valid @RequestBody HistoryRequest historyRequest){
 
+		//Creating event
+		History event = new History(historyRequest.getContainerId(), historyRequest.getEventDateTime(), historyRequest.getEventText());
+
+		History result = historyRepository.save(event);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/event-container/{id}")
+				.buildAndExpand(result.getEventId()).toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "Event to the history has been successfully added!"));
+	}
 
 }

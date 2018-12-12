@@ -18,5 +18,4 @@ public interface ContainerRepository extends JpaRepository<Container, Long> {
     @Query(nativeQuery = true, value = "SELECT * FROM containers WHERE id IN " +
             "(SELECT container_id FROM access_to_containers WHERE user_id = :id)")
     List<Container> getUserContainers(@Param("id") Long id);
-
-}
+    }

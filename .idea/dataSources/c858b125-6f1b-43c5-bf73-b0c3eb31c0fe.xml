@@ -1135,7 +1135,7 @@ container_id</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="287" parent="277" name="container_id">
+    <index id="287" parent="277" name="access_to_containers_ibfk_2">
       <ColNames>container_id</ColNames>
       <Type>btree</Type>
     </index>
@@ -1160,6 +1160,7 @@ container_id</ColNames>
       <RefSchemaName>bsm</RefSchemaName>
       <RefTableName>containers</RefTableName>
       <RefColNames>id</RefColNames>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="292" parent="278" name="id">
       <Position>1</Position>
@@ -1211,7 +1212,7 @@ container_id</ColNames>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="300" parent="279" name="container_id">
+    <index id="300" parent="279" name="history_ibfk_1">
       <ColNames>container_id</ColNames>
       <Type>btree</Type>
     </index>
@@ -1225,6 +1226,7 @@ container_id</ColNames>
       <RefSchemaName>bsm</RefSchemaName>
       <RefTableName>containers</RefTableName>
       <RefColNames>id</RefColNames>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="303" parent="280" name="id">
       <Position>1</Position>

@@ -3,16 +3,15 @@ package sec.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import payloads.AccessingContainersRequest;
 import payloads.ApiResponse;
 import payloads.ContainerRequest;
+import payloads.UpdateUserRequest;
 import sec.model.AccessingContainers;
 import sec.model.Container;
+import sec.model.User;
 import sec.repo.AccessingContainersRepository;
 import sec.repo.ContainerRepository;
 import sec.repo.HistoryRepository;
@@ -20,6 +19,7 @@ import sec.repo.UserRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/bsm")
@@ -67,4 +67,55 @@ public class GeneralController {
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Access to the container has been successfully given!"));
 	}
 
+	@PostMapping("/update/container")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String updateContainer(@RequestParam("id") Long id, @RequestParam("info") String newInfo, @RequestParam("date") String newDate){
+		containerRepository.updateContainer(id, newInfo, newDate);
+		return "OK";
+	}
+
+	@DeleteMapping("/delete/container")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String deleteContainer(@RequestParam("id") Long id){
+		containerRepository.deleteContainer(id);
+		return "OK";
+	}
+//check
+
+	@PostMapping("/update/accessing-containers")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String updateAccessingContainers(@RequestParam("id") Long id, @RequestParam("userId") Long userId, @RequestParam("containerId") Long containerId){
+		accessingContainersRepository.updateAccessingContainers(id, userId, containerId);
+		return "OK";
+	}
+
+//check
+
+	@DeleteMapping("/delete/accessing-containers")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String deleteAccessingContainers(@RequestParam("id") Long id){
+		accessingContainersRepository.deleteAccessingContainers(id);
+		return "OK";
+	}
+
+	@GetMapping("/users/request-register")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<User> getGuestUsers(){
+	    return userRepository.getGuestUsers();
+    }
+
+
+    @PostMapping("/update/request-register")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String acceptRegistrationRequest(@RequestParam("user_id") Long user_id){
+	    userRepository.acceptRegistrationRequest(user_id);
+	    return "OK";
+    }
+
+    @PostMapping("/update/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+	    userRepository.updateUser(updateUserRequest.getId(), updateUserRequest.getName(), updateUserRequest.getUsername(), updateUserRequest.getEmail());
+	    return "OK";
+    }
 }

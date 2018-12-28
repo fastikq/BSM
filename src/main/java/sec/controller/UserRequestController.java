@@ -31,7 +31,7 @@ public class UserRequestController {
 
     @GetMapping("/user-details")
     @PreAuthorize("hasRole('USER')")
-    public List<String> getUserDetails() {
+    public User getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> currentUser = userRepository.findByUsername(auth.getName());
         User user = userRepository.getUserDetails(currentUser.get().getId());
@@ -39,7 +39,7 @@ public class UserRequestController {
         listDetails.add(user.getName());
         listDetails.add(user.getUsername());
         listDetails.add(user.getEmail());
-        return listDetails;
+        return user;
     }
 
 

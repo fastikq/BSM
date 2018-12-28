@@ -52,6 +52,19 @@ public class GeneralController {
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Container added successfully"));
 	}
 
+    @GetMapping("/containers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Container> getContainers(){
+        return containerRepository.getContainers();
+    }
+
+
+    @GetMapping("/accessing")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<AccessingContainers> getAccessing(){
+        return accessingContainersRepository.getAccessing();
+    }
+
 	@PostMapping("/add/accessing-container")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addAccessToContainer(@Valid @RequestBody AccessingContainersRequest accessingContainersRequest){
@@ -80,7 +93,6 @@ public class GeneralController {
 		containerRepository.deleteContainer(id);
 		return "OK";
 	}
-//check
 
 	@PostMapping("/update/accessing-containers")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -88,8 +100,6 @@ public class GeneralController {
 		accessingContainersRepository.updateAccessingContainers(id, userId, containerId);
 		return "OK";
 	}
-
-//check
 
 	@DeleteMapping("/delete/accessing-containers")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -111,6 +121,12 @@ public class GeneralController {
 	    userRepository.acceptRegistrationRequest(user_id);
 	    return "OK";
     }
+
+	@GetMapping("/users")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<User> getUsers(){
+		return userRepository.getUsers();
+	}
 
     @PostMapping("/update/user")
     @PreAuthorize("hasRole('ADMIN')")

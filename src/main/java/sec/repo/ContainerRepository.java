@@ -30,4 +30,8 @@ public interface ContainerRepository extends JpaRepository<Container, Long> {
     @Transactional
     @Query(nativeQuery = true, value = "DELETE FROM containers WHERE id = :id")
     void deleteContainer(@Param("id") Long id);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM containers")
+    List<Container> getContainers();
+
 }

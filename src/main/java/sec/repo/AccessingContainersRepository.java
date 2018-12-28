@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import sec.model.AccessingContainers;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface AccessingContainersRepository extends JpaRepository<AccessingContainers, Long> {
@@ -21,5 +22,9 @@ public interface AccessingContainersRepository extends JpaRepository<AccessingCo
     @Transactional
     @Query(nativeQuery = true, value = "DELETE FROM access_to_containers WHERE id = :id")
     void deleteAccessingContainers(@Param("id") Long id);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM access_to_containers")
+    List<AccessingContainers> getAccessing();
+
 
 }

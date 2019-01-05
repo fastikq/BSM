@@ -34,4 +34,7 @@ public interface ContainerRepository extends JpaRepository<Container, Long> {
     @Query(nativeQuery = true, value = "SELECT * FROM containers")
     List<Container> getContainers();
 
+    @Query(nativeQuery = true, value = "Select id container from containers")
+    List<Integer> getContainersId();
+
 }

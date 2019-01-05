@@ -26,13 +26,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Boolean existsByEmail(String email);
 
-	@Query(nativeQuery = true, value = "SELECT * FROM users")
+	@Query(nativeQuery = true, value = "SELECT * FROM users WHERE id IN (SELECT user_id FROM user_roles WHERE role_id = 1)")
 	List<User> getUsers();
 
 	@Query(nativeQuery = true, value = "SELECT * FROM users WHERE users.id = :id")
 	User getUserDetails(@Param("id") Long id);
 
-	@Query(nativeQuery = true, value = "SELECT * FROM users  WHERE id IN (SELECT user_id FROM user_roles WHERE role_id = 3)")
+	@Query(nativeQuery = true, value = "SELECT * FROM users WHERE id IN (SELECT user_id FROM user_roles WHERE role_id = 3)")
 	List<User> getGuestUsers();
 
     @Modifying

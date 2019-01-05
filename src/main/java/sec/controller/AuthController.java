@@ -8,10 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import payloads.*;
 import sec.exception.AppException;
@@ -19,6 +16,7 @@ import sec.model.History;
 import sec.model.Role;
 import sec.model.RoleName;
 import sec.model.User;
+import sec.repo.ContainerRepository;
 import sec.repo.HistoryRepository;
 import sec.repo.RoleRepository;
 import sec.repo.UserRepository;
@@ -27,6 +25,7 @@ import sec.security.JwtTokenProvider;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,6 +36,9 @@ public class AuthController {
 
 	@Autowired
     UserRepository userRepository;
+
+	@Autowired
+	ContainerRepository containerRepository;
 
 	@Autowired
 	HistoryRepository historyRepository;
@@ -103,6 +105,11 @@ public class AuthController {
 				.buildAndExpand(result.getEventId()).toUri();
 
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Event to the history has been successfully added!"));
+	}
+
+	@GetMapping("/containers-id")
+	public List<Integer> getContainersId(){
+		return containerRepository.getContainersId();
 	}
 
 }

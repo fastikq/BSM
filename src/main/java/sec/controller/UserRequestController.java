@@ -5,6 +5,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import payloads.AllHistoryRequest;
+import payloads.HistoryOfDayRequest;
 import sec.model.Container;
 import sec.model.History;
 import sec.model.User;
@@ -50,22 +52,22 @@ public class UserRequestController {
         return containerRepository.getContainer(containerId);
     }
 
-    @GetMapping("/history-container")
+    @PostMapping("/history-container")
     @PreAuthorize("hasRole('USER')")
-    public List<History> getContainerHistory(@RequestParam("containerId") Long containerId) {
+    public List<History> getContainerHistory(@RequestBody AllHistoryRequest allHistoryRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> user = userRepository.findByUsername(auth.getName());
-        return historyRepository.getHistoryContainer(user.get().getId(), containerId);
+        return historyRepository.getHistoryContainer(user.get().getId(), allHistoryRequest.getContainerId());
     }
 
-    @GetMapping("/history-container-day")
+    @PostMapping("/history-container-day")
     @PreAuthorize("hasRole('USER')")
-    public List<History> getContainerHistoryOfDay(@RequestParam("containerId") Long containerId, @RequestParam("date") String date) {
+    public List<History> getContainerHistoryOfDay(@RequestBody HistoryOfDayRequest historyOfDayRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> user = userRepository.findByUsername(auth.getName());
-        String startDateTime = date + " 00:00:00";
-        String endDateTime = date + " 23:59:59";
-        return historyRepository.getHistoryOfDayContainer(user.get().getId(), containerId, startDateTime, endDateTime);
+        String startDateTime = historyOfDayRequest.getDate() + " 00:00:00";
+        String endDateTime = historyOfDayRequest.getDate() + " 23:59:59";
+        return historyRepository.getHistoryOfDayContainer(user.get().getId(),historyOfDayRequest.getContainerId(), startDateTime, endDateTime);
     }
 
     @GetMapping("/user-containers")
